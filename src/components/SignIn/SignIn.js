@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 
+// only import the signIn axios call
 import { signIn } from '../../api/auth'
 import messages from '../AutoDismissAlert/messages'
 
@@ -11,6 +12,7 @@ class SignIn extends Component {
   constructor (props) {
     super(props)
 
+    // the same state as signUp, but without a passwordConfirmation
     this.state = {
       email: '',
       password: ''
@@ -26,6 +28,7 @@ class SignIn extends Component {
 
     const { msgAlert, history, setUser } = this.props
 
+    // call signIn directly
     signIn(this.state)
       .then(res => setUser(res.data.user))
       .then(() => msgAlert({
@@ -35,6 +38,7 @@ class SignIn extends Component {
       }))
       .then(() => history.push('/'))
       .catch(error => {
+        // reset the state, only email and password are needed in sign in
         this.setState({ email: '', password: '' })
         msgAlert({
           heading: 'Sign In Failed with error: ' + error.message,
@@ -52,6 +56,7 @@ class SignIn extends Component {
         <div className="col-sm-10 col-md-8 mx-auto mt-5">
           <h3>Sign In</h3>
           <Form onSubmit={this.onSignIn}>
+            {/* Only include Form.Control's for email and password on sign in */}
             <Form.Group controlId="email">
               <Form.Label>Email address</Form.Label>
               <Form.Control

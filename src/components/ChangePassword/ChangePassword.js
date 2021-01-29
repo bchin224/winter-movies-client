@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 
+// import the changePassword axios http method
 import { changePassword } from '../../api/auth'
 import messages from '../AutoDismissAlert/messages'
 
@@ -11,6 +12,8 @@ class ChangePassword extends Component {
   constructor (props) {
     super(props)
 
+    // to change a passowrd, the api needs the old and new passwords
+    // so we add those to our initial state
     this.state = {
       oldPassword: '',
       newPassword: ''
@@ -26,6 +29,9 @@ class ChangePassword extends Component {
 
     const { msgAlert, history, user } = this.props
 
+    // call our changePassword axios request
+    // pass it our old and new passwords (this.state)
+    // also pass the user, so the request has access to the user's token
     changePassword(this.state, user)
       .then(() => msgAlert({
         heading: 'Change Password Success',
@@ -34,6 +40,7 @@ class ChangePassword extends Component {
       }))
       .then(() => history.push('/'))
       .catch(error => {
+        // reset the changePassword state
         this.setState({ oldPassword: '', newPassword: '' })
         msgAlert({
           heading: 'Change Password Failed with error: ' + error.message,
@@ -44,6 +51,7 @@ class ChangePassword extends Component {
   }
 
   render () {
+    // destructure (extract) the old and new passwords from state
     const { oldPassword, newPassword } = this.state
 
     return (
@@ -51,6 +59,9 @@ class ChangePassword extends Component {
         <div className="col-sm-10 col-md-8 mx-auto mt-5">
           <h3>Change Password</h3>
           <Form onSubmit={this.onChangePassword}>
+            {/* The old password and new password Form.Control's are similar to the password
+              Form.Control in SignIn, but they have updated controlId, name and placeholder
+              props */}
             <Form.Group controlId="oldPassword">
               <Form.Label>Old password</Form.Label>
               <Form.Control
